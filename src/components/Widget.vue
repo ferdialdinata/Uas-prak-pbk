@@ -33,36 +33,29 @@
   </q-page>
 </template>
 
-<script>
-import axios from 'axios'
+<script setup>
+import { ref, computed } from 'vue';
+import axios from 'axios';
 
-export default {
-  data() {
-    return {
-      location: '',
-      weather: null,
-      apiKey: '161162b0a1891b4b3a3970038806152d'
-    }
-  },
-  computed: {
-    currentTime() {
-      const now = new Date()
-      return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }
-  },
-  methods: {
-    async fetchWeather() {
-      try {
-        const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${this.location}&units=metric&appid=${this.apiKey}`
-        )
-        this.weather = response.data
-      } catch (error) {
-        console.error('Failed to fetch weather data:', error)
-      }
-    }
+const location = ref('');
+const weather = ref(null);
+const apiKey = '161162b0a1891b4b3a3970038806152d';
+
+const fetchWeather = async () => {
+  try {
+    const response = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?q=${location.value}&units=metric&appid=${apiKey}`
+    );
+    weather.value = response.data;
+  } catch (error) {
+    console.error('Failed to fetch weather data:', error);
   }
-}
+};
+
+const currentTime = computed(() => {
+  const now = new Date();
+  return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+});
 </script>
 
 <style scoped>
